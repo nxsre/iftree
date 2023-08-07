@@ -26,15 +26,19 @@ type Node struct {
 	Type NodeType
 
 	// veth
-	Veth            string
-	Peer            string
-	PeerNameInNetns string
-	PeerId          int
-	Orphaned        bool
-	NetNsID         int
-	NetNsName       string
-	Master          *Bridge
-	Route           net.IP
+	Veth                    string
+	VethIndex               int
+	VethHardwareAddr        net.HardwareAddr
+	Peer                    string
+	PeerNameInNetns         string
+	PeerHardwareAddrInNetns net.HardwareAddr
+	PeerHostnameInNetns     string
+	PeerId                  int
+	Orphaned                bool
+	NetNsID                 int
+	NetNsName               string
+	Master                  *Bridge
+	Route                   net.IP
 
 	// general
 	Name   string

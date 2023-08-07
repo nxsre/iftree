@@ -27,7 +27,7 @@ func Table(w io.Writer, m map[string][]types.Node) error {
 	t.SetOutputMirror(&tbStr)
 
 	t.SetTitle(boldItalicTextStyle.SetString("bridge <---> veth <---> veth in container, GROUP BY NetNS").String())
-	t.AppendHeader(table.Row{"bridge", "netns", "veth", "ifname"})
+	t.AppendHeader(table.Row{"bridge", "netns", "veth", "mac", "netns_ifname", "netns_mac"})
 
 	for bridge, v := range m {
 		for _, vp := range v {
@@ -42,9 +42,11 @@ func Table(w io.Writer, m map[string][]types.Node) error {
 			c := lipgloss.Color(tableNsColors[id%len(tableNsColors)][0])
 			t.AppendRow(table.Row{
 				bridgeStyle.SetString(bridge),
-				netNsStyle.Copy().Foreground(c).SetString(vp.NetNsName),
+				netNsStyle.Copy().Foreground(c).SetString(fmt.Sprintf("%s(%d)", vp.NetNsName, vp.NetNsID)),
 				basicTextStyle.SetString(vp.Veth),
-				basicTextStyle.SetString(vp.PeerNameInNetns)})
+				basicTextStyle.SetString(vp.VethHardwareAddr.String()),
+				basicTextStyle.SetString(vp.PeerNameInNetns),
+				basicTextStyle.SetString(vp.PeerHardwareAddrInNetns.String())})
 			t.AppendSeparator()
 		}
 	}
